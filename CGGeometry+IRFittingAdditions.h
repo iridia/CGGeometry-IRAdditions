@@ -80,4 +80,38 @@ CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat mi
 
 
 
+CG_INLINE CGPoint
+
+CGGetCenterOfRect(CGRect theRect) {
+	
+	return CGPointMake(
+
+		theRect.origin.x + (theRect.size.width / 2),
+		theRect.origin.y + (theRect.size.height / 2)
+
+	);
+	
+}
+
+
+
+
+
+CG_INLINE CGPoint
+
+CGGetRelativeMidPointOfRect(CGRect theRect) {
+	
+	return CGPointMake(
+			   
+		theRect.size.width / 2,
+		theRect.size.height / 2
+
+	);
+	
+}
+
+
+
+
+
 #endif
