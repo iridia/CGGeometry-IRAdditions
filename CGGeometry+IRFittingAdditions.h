@@ -64,7 +64,6 @@ CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat mi
 	
 	);
 	
-	
 	return CGRectMake(
 				
 		enclosingRect.origin.x + ((enclosingRect.size.width - currentEnclosedSizeSize.width) / 2), 
@@ -72,6 +71,25 @@ CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat mi
 		currentEnclosedSizeSize.width, 
 		currentEnclosedSizeSize.height
 				
+	);
+
+}
+
+
+
+
+
+CG_INLINE CGRect
+
+CGGetInsetRectWithPadding(CGRect originalRect, CGFloat thePadding) {
+
+	return CGRectMake(
+	
+		originalRect.origin.x + (1 * thePadding),
+		originalRect.origin.y + (1 * thePadding),
+		originalRect.size.width + (-2 * thePadding),
+		originalRect.size.height + (-2 * thePadding)
+	
 	);
 
 }
