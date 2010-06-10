@@ -20,6 +20,41 @@
 
 
 
+typedef enum {
+
+	IRCGTranslateAlignTypeCenter,
+	IRCGTranslateAlignTypeTop,
+	IRCGTranslateAlignTypeTopRight,
+	IRCGTranslateAlignTypeRight,
+	IRCGTranslateAlignTypeBottomRight,
+	IRCGTranslateAlignTypeBottom,
+	IRCGTranslateAlignTypeBottomLeft,
+	IRCGTranslateAlignTypeLeft,
+	IRCGTranslateAlignTypeTopLeft
+	
+} IRCGTranslateAlignType;
+
+
+
+
+
+struct IRCGDelta {
+
+	CGFloat x;
+	CGFloat y;
+
+};
+typedef struct IRCGDelta IRCGDelta;
+
+
+
+
+
+
+
+
+
+
 CG_INLINE CGRect
 
 CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding) {
@@ -149,6 +184,174 @@ CG_INLINE void
 CGDumpPoint(CGPoint thePoint, NSString *theMessage) {
 
 	NSLog(@"%@ = (%f %f)", theMessage, thePoint.x, thePoint.y);
+
+}
+
+
+
+
+
+CG_INLINE CGRect
+
+CGTranslateRect(CGRect theRect, CGFloat translateX, CGFloat translateY) {
+
+	return CGRectMake(
+	
+		theRect.origin.x + translateX, 
+		theRect.origin.y + translateY, 
+		theRect.size.width, 
+		theRect.size.height
+		
+	);
+
+}
+
+
+
+
+
+
+CG_INLINE IRCGDelta
+
+IRCGDeltaMake (CGFloat deltaX, CGFloat deltaY) {
+
+	IRCGDelta delta;
+	delta.x = deltaX;
+	delta.y = deltaY;
+	return delta;
+
+}
+
+
+
+
+
+CG_INLINE IRCGDelta
+
+IRCGDeltaMakeDeltaFromPointToPoint (CGPoint origin, CGPoint destination) {
+
+	IRCGDelta delta;
+	delta.x = destination.x - origin.x;
+	delta.y = destination.y - origin.y;
+	return delta;
+
+}
+
+
+
+
+
+CG_INLINE CGRect
+
+CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType) {
+
+	CGPoint originPoint;
+	CGPoint destinationPoint;
+	
+	CGFloat (* processorX)(CGRect) = NULL;
+	CGFloat (* processorY)(CGRect) = NULL;
+	
+	
+	
+	
+	
+	//	X
+	
+	switch (alignType) {
+
+		case IRCGTranslateAlignTypeTopLeft:
+		case IRCGTranslateAlignTypeLeft:
+		case IRCGTranslateAlignTypeBottomLeft:
+		
+			processorX = &CGRectGetMinX;
+			break;
+			
+		case IRCGTranslateAlignTypeTop:
+		case IRCGTranslateAlignTypeCenter:
+		case IRCGTranslateAlignTypeBottom:
+		
+			processorX = &CGRectGetMidX;
+			break;
+		
+		case IRCGTranslateAlignTypeTopRight:
+		case IRCGTranslateAlignTypeRight:
+		case IRCGTranslateAlignTypeBottomRight:
+		
+			processorX = &CGRectGetMaxX;
+			break;
+			
+	}
+	
+	
+	
+	
+	
+
+	//	Y	
+	
+	switch (alignType) {
+
+		case IRCGTranslateAlignTypeBottomLeft:
+		case IRCGTranslateAlignTypeBottom:
+		case IRCGTranslateAlignTypeBottomRight:
+		
+			processorY = &CGRectGetMinY;
+			break;
+			
+		case IRCGTranslateAlignTypeLeft:
+		case IRCGTranslateAlignTypeCenter:
+		case IRCGTranslateAlignTypeRight:
+		
+			processorY = &CGRectGetMidY;
+			break;
+		
+		case IRCGTranslateAlignTypeTopLeft:
+		case IRCGTranslateAlignTypeTop:
+		case IRCGTranslateAlignTypeTopRight:
+		
+			processorY = &CGRectGetMaxY;
+			break;
+			
+	}
+	
+	
+	
+	
+	
+	//	Delta
+	
+	originPoint = CGPointMake(processorX(theRect), processorY(theRect));
+	destinationPoint = CGPointMake(processorX(referenceRect), processorY(referenceRect));
+	
+	IRCGDelta theDelta = IRCGDeltaMakeDeltaFromPointToPoint(originPoint, destinationPoint);
+
+	return CGTranslateRect(theRect, theDelta.x, theDelta.y);
+
+}
+
+
+
+
+
+CG_INLINE CGRect
+
+CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType) {
+
+	return CGGetAlignedRectFromRectToReferenceRect(
+	
+		CGRectMake(
+	
+			theRect.origin.x, 
+			theRect.origin.y, 
+			width, 
+			height
+			
+		),
+	
+		theRect, 
+		alignType
+		
+	);
 
 }
 
