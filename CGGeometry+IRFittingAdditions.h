@@ -132,4 +132,16 @@ CGGetRelativeMidPointOfRect(CGRect theRect) {
 
 
 
+CG_INLINE void
+
+CGDumpRect(CGRect theRect, NSString *theMessage) {
+
+	NSLog(@"%@ = (%f %f; %f %f)", theMessage, theRect.origin.x, theRect.origin.y, theRect.size.width, theRect.size.height);
+
+}
+
+
+
+
+
 #endif
