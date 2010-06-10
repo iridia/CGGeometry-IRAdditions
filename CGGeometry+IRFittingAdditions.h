@@ -144,4 +144,16 @@ CGDumpRect(CGRect theRect, NSString *theMessage) {
 
 
 
+CG_INLINE void
+
+CGDumpPoint(CGPoint thePoint, NSString *theMessage) {
+
+	NSLog(@"%@ = (%f %f)", theMessage, thePoint.x, thePoint.y);
+
+}
+
+
+
+
+
 #endif
