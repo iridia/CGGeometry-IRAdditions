@@ -322,9 +322,8 @@ IRCGDeltaMakeDeltaFromPointToPoint (CGPoint origin, CGPoint destination) {
 
 
 
-CG_INLINE CGRect
 
-CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
+CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
 
 	CGPoint originPoint;
 	CGPoint destinationPoint;
@@ -427,7 +426,7 @@ CG_INLINE CGRect
 
 CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType, BOOL flipped) {
 
-	return CGGetAlignedRectFromRectToReferenceRect(
+	return IRCGRectAlignToRect(
 	
 		CGRectMake(
 	
