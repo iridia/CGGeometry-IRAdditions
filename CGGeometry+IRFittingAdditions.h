@@ -72,15 +72,16 @@ typedef struct IRCGDelta {
 
 
 
-# pragma mark Fitting Rects
 
 
 
 
 
-CG_INLINE CGRect
 
-CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
+
+
+
+
 # pragma mark Introspection
 
 
@@ -152,6 +153,13 @@ CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
 
 
 
+# pragma mark Fitting CGSizes & CGRects
+
+
+
+
+
+CG_INLINE CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
 
 	float enclosedRectAspectRatio = enclosedSize.width / enclosedSize.height;
 	
@@ -200,9 +208,7 @@ CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
 
 
 
-CG_INLINE CGRect
-
-CGGetInsetRectWithPadding(CGRect originalRect, CGFloat thePadding) {
+CG_INLINE CGRect IRCGRectGetInsetRect (CGRect originalRect, CGFloat thePadding) {
 
 	return CGRectMake(
 	
@@ -219,14 +225,12 @@ CGGetInsetRectWithPadding(CGRect originalRect, CGFloat thePadding) {
 
 
 
-CG_INLINE CGPoint
-
-CGGetCenterOfRect(CGRect theRect) {
+CG_INLINE CGPoint IRCGRectGetGlobalMidXY(CGRect theRect) {
 	
 	return CGPointMake(
 
-		theRect.origin.x + (theRect.size.width / 2),
-		theRect.origin.y + (theRect.size.height / 2)
+		theRect.origin.x + CGRectGetMaxX(theRect),
+		theRect.origin.y + CGRectGetMaxY(theRect)
 
 	);
 	
@@ -236,9 +240,7 @@ CGGetCenterOfRect(CGRect theRect) {
 
 
 
-CG_INLINE CGPoint
-
-CGGetRelativeMidPointOfRect(CGRect theRect) {
+CG_INLINE CGPoint IRCGRectGetLocalMidXY(CGRect theRect) {
 	
 	return CGPointMake(
 			   
@@ -268,13 +270,13 @@ CGGetRelativeMidPointOfRect(CGRect theRect) {
 
 
 
+# pragma mark Delta & Translating
 
 
 
 
-CG_INLINE CGRect
 
-CGTranslateRect(CGRect theRect, CGFloat translateX, CGFloat translateY) {
+CG_INLINE CGRect IRCGRectTranslate (CGRect theRect, CGFloat translateX, CGFloat translateY) {
 
 	return CGRectMake(
 	
@@ -292,13 +294,13 @@ CGTranslateRect(CGRect theRect, CGFloat translateX, CGFloat translateY) {
 
 
 
-CG_INLINE IRCGDelta
-
-IRCGDeltaMake (CGFloat deltaX, CGFloat deltaY) {
+CG_INLINE IRCGDelta IRCGDeltaMake (CGFloat deltaX, CGFloat deltaY) {
 
 	IRCGDelta delta;
+	
 	delta.x = deltaX;
 	delta.y = deltaY;
+
 	return delta;
 
 }
@@ -307,17 +309,37 @@ IRCGDeltaMake (CGFloat deltaX, CGFloat deltaY) {
 
 
 
-CG_INLINE IRCGDelta
-
-IRCGDeltaMakeDeltaFromPointToPoint (CGPoint origin, CGPoint destination) {
+CG_INLINE IRCGDelta IRCGDeltaMakeFromPoints (CGPoint origin, CGPoint destination) {
 
 	IRCGDelta delta;
+
 	delta.x = destination.x - origin.x;
 	delta.y = destination.y - origin.y;
+
 	return delta;
 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# pragma mark Aligning & Scaling Rects
 
 
 
@@ -334,6 +356,7 @@ CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCG
 	CGFloat (* processorYTop)(CGRect) = NULL;
 	CGFloat (* processorYBottom)(CGRect) = NULL;
 	
+	
 	if (flipped) {
 		
 		processorYTop = &CGRectGetMinY;
@@ -345,6 +368,7 @@ CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCG
 		processorYBottom = &CGRectGetMaxY;
 		
 	}
+	
 	
 	switch (alignType) {
 
@@ -372,12 +396,6 @@ CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCG
 	}
 	
 	
-	
-	
-	
-
-	//	Y	
-	
 	switch (alignType) {
 
 		case IRCGTranslateAlignTypeBottomLeft:
@@ -404,17 +422,12 @@ CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCG
 	}
 	
 	
-	
-	
-	
-	//	Delta
-	
 	originPoint = CGPointMake(processorX(theRect), processorY(theRect));
 	destinationPoint = CGPointMake(processorX(referenceRect), processorY(referenceRect));
 	
-	IRCGDelta theDelta = IRCGDeltaMakeDeltaFromPointToPoint(originPoint, destinationPoint);
+	IRCGDelta theDelta = IRCGDeltaMakeFromPoints(originPoint, destinationPoint);
 	
-	return CGTranslateRect(theRect, theDelta.x, theDelta.y);
+	return IRCGRectTranslate(theRect, theDelta.x, theDelta.y);
 
 }
 
@@ -422,9 +435,7 @@ CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCG
 
 
 
-CG_INLINE CGRect
-
-CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType, BOOL flipped) {
+CG_INLINE CGRect IRCGRectScale (CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType, BOOL flipped) {
 
 	return IRCGRectAlignToRect(
 	
