@@ -20,6 +20,13 @@
 
 
 
+
+
+
+
+
+# pragma mark Structures and Types
+
 typedef enum {
 
 	IRCGTranslateAlignTypeCenter,
@@ -38,18 +45,34 @@ typedef enum {
 
 
 
-struct IRCGDelta {
+typedef enum {
+	
+	IRCGFlippingFlagFlipped = YES,
+	IRCGFlippingFlagUnflipped = NO	
+	
+} IRCGFlippingFlag;
+
+
+
+
+
+typedef struct IRCGDelta {
 
 	CGFloat x;
 	CGFloat y;
 
-};
-typedef struct IRCGDelta IRCGDelta;
+} IRCGDelta;
 
 
 
 
 
+
+
+
+
+
+# pragma mark Fitting Rects
 
 
 
@@ -57,13 +80,9 @@ typedef struct IRCGDelta IRCGDelta;
 
 CG_INLINE CGRect
 
-CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding) {
+CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
 
 	float enclosedRectAspectRatio = enclosedSize.width / enclosedSize.height;
-	
-	
-	
-	
 	
 	CGSize maximumEnclosedSizeSize = CGSizeMake(
 					    
@@ -78,10 +97,6 @@ CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat mi
 		enclosedSize.height
 	
 	);
-	
-	
-	
-	
 	
 	if (currentEnclosedSizeSize.width > maximumEnclosedSizeSize.width)
 	currentEnclosedSizeSize = CGSizeMake(
@@ -191,6 +206,30 @@ CGDumpPoint(CGPoint thePoint, NSString *theMessage) {
 
 
 
+CG_INLINE void
+
+CGDumpExtremes(CGRect theRect, NSString *theMessage) {
+	
+	NSLog(
+	
+		@"%@ = (%f %f %f; %f %f %f)", theMessage, 
+	
+		CGRectGetMinX(theRect),
+		CGRectGetMidX(theRect),
+		CGRectGetMaxX(theRect),
+
+		CGRectGetMinY(theRect),
+		CGRectGetMidY(theRect),
+		CGRectGetMaxY(theRect)
+	      
+	);
+	
+}
+
+
+
+
+
 CG_INLINE CGRect
 
 CGTranslateRect(CGRect theRect, CGFloat translateX, CGFloat translateY) {
@@ -243,7 +282,7 @@ IRCGDeltaMakeDeltaFromPointToPoint (CGPoint origin, CGPoint destination) {
 
 CG_INLINE CGRect
 
-CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType) {
+CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
 
 	CGPoint originPoint;
 	CGPoint destinationPoint;
@@ -251,11 +290,20 @@ CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IR
 	CGFloat (* processorX)(CGRect) = NULL;
 	CGFloat (* processorY)(CGRect) = NULL;
 	
+	CGFloat (* processorYTop)(CGRect) = NULL;
+	CGFloat (* processorYBottom)(CGRect) = NULL;
 	
-	
-	
-	
-	//	X
+	if (flipped) {
+		
+		processorYTop = &CGRectGetMinY;
+		processorYBottom = &CGRectGetMaxY;
+		
+	} else {
+		
+		processorYTop = &CGRectGetMaxY;
+		processorYBottom = &CGRectGetMaxY;
+		
+	}
 	
 	switch (alignType) {
 
@@ -295,7 +343,7 @@ CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IR
 		case IRCGTranslateAlignTypeBottom:
 		case IRCGTranslateAlignTypeBottomRight:
 		
-			processorY = &CGRectGetMinY;
+			processorY = processorYBottom;
 			break;
 			
 		case IRCGTranslateAlignTypeLeft:
@@ -308,8 +356,8 @@ CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IR
 		case IRCGTranslateAlignTypeTopLeft:
 		case IRCGTranslateAlignTypeTop:
 		case IRCGTranslateAlignTypeTopRight:
-		
-			processorY = &CGRectGetMaxY;
+
+			processorY = processorYTop;
 			break;
 			
 	}
@@ -324,7 +372,7 @@ CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IR
 	destinationPoint = CGPointMake(processorX(referenceRect), processorY(referenceRect));
 	
 	IRCGDelta theDelta = IRCGDeltaMakeDeltaFromPointToPoint(originPoint, destinationPoint);
-
+	
 	return CGTranslateRect(theRect, theDelta.x, theDelta.y);
 
 }
@@ -335,7 +383,7 @@ CGGetAlignedRectFromRectToReferenceRect(CGRect theRect, CGRect referenceRect, IR
 
 CG_INLINE CGRect
 
-CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType) {
+CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType, BOOL flipped) {
 
 	return CGGetAlignedRectFromRectToReferenceRect(
 	
@@ -349,7 +397,8 @@ CGGetResizedRect(CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAli
 		),
 	
 		theRect, 
-		alignType
+		alignType,
+		flipped
 		
 	);
 
