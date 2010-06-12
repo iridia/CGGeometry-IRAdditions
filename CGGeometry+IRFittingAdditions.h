@@ -130,7 +130,7 @@ CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
 	      CGRectGetMidY(theRect),
 	      CGRectGetMaxY(theRect)
 	      
-	      );
+	);
 	
 }
 
