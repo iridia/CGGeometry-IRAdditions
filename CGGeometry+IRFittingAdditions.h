@@ -81,6 +81,77 @@ typedef struct IRCGDelta {
 CG_INLINE CGRect
 
 CGFitSizeInRectWithPadding(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
+# pragma mark Introspection
+
+
+
+
+
+CG_INLINE void IRCGDumpRect(CGRect theRect, NSString *theMessage) {
+	
+	NSLog(@"%@ = (%f %f; %f %f)", theMessage, theRect.origin.x, theRect.origin.y, theRect.size.width, theRect.size.height);
+	
+}
+
+
+
+
+
+CG_INLINE void IRCGDumpSize(CGSize theSize, NSString *theMessage) {
+	
+	NSLog(@"%@ = (%f %f)", theMessage, theSize.width, theSize.height);
+	
+}
+
+
+
+
+
+CG_INLINE void IRCGDumpPoint(CGPoint thePoint, NSString *theMessage) {
+	
+	NSLog(@"%@ = (%f %f)", theMessage, thePoint.x, thePoint.y);
+	
+}
+
+
+
+
+
+CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
+	
+	NSLog(@"%@ = (%f %f %f; %f %f %f)", theMessage, 
+	      
+	      CGRectGetMinX(theRect),
+	      CGRectGetMidX(theRect),
+	      CGRectGetMaxX(theRect),
+	      
+	      CGRectGetMinY(theRect),
+	      CGRectGetMidY(theRect),
+	      CGRectGetMaxY(theRect)
+	      
+	      );
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	float enclosedRectAspectRatio = enclosedSize.width / enclosedSize.height;
 	
@@ -182,49 +253,20 @@ CGGetRelativeMidPointOfRect(CGRect theRect) {
 
 
 
-CG_INLINE void
-
-CGDumpRect(CGRect theRect, NSString *theMessage) {
-
-	NSLog(@"%@ = (%f %f; %f %f)", theMessage, theRect.origin.x, theRect.origin.y, theRect.size.width, theRect.size.height);
-
-}
 
 
 
 
 
-CG_INLINE void
-
-CGDumpPoint(CGPoint thePoint, NSString *theMessage) {
-
-	NSLog(@"%@ = (%f %f)", theMessage, thePoint.x, thePoint.y);
-
-}
 
 
 
 
 
-CG_INLINE void
 
-CGDumpExtremes(CGRect theRect, NSString *theMessage) {
-	
-	NSLog(
-	
-		@"%@ = (%f %f %f; %f %f %f)", theMessage, 
-	
-		CGRectGetMinX(theRect),
-		CGRectGetMidX(theRect),
-		CGRectGetMaxX(theRect),
 
-		CGRectGetMinY(theRect),
-		CGRectGetMidY(theRect),
-		CGRectGetMaxY(theRect)
-	      
-	);
-	
-}
+
+
 
 
 
