@@ -535,6 +535,42 @@ CG_INLINE IRCGDelta IRCGDeltaMakeFromPoints (CGPoint origin, CGPoint destination
 
 
 
+CG_INLINE IRCGTranslateAlignType IRCGTranslateAlignTypeFromEdge (IRCGEdge edge) {
+	
+	switch (edge) {
+
+		case IRCGEdgeTop:
+
+			return IRCGTranslateAlignTypeTop;
+			break;
+		
+		case IRCGEdgeRight:
+			
+			return IRCGTranslateAlignTypeRight;
+			break;
+			
+		case IRCGEdgeBottom:
+			
+			return IRCGTranslateAlignTypeBottom;
+			break;
+			
+		case IRCGEdgeLeft:
+			
+			return IRCGTranslateAlignTypeLeft;
+			break;
+			
+		default:
+		
+			return IRCGTranslateAlignTypeCenter;
+			break;
+
+	}
+	
+}
+
+
+
+
 
 CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
 
