@@ -27,6 +27,10 @@
 
 # pragma mark Structures and Types
 
+
+
+
+
 typedef enum {
 
 	IRCGTranslateAlignTypeCenter,
@@ -62,6 +66,70 @@ typedef struct IRCGDelta {
 	CGFloat y;
 
 } IRCGDelta;
+
+
+
+
+
+typedef enum {
+	
+	IRCGEdgeTop,
+	IRCGEdgeRight,
+	IRCGEdgeBottom,
+	IRCGEdgeLeft
+	
+} IRCGEdge;
+
+
+
+
+
+typedef enum {
+	
+	IRCGBorderTypeInset,
+	IRCGBorderTypeNormal,
+	IRCGBorderTypeOutset
+	
+} IRCGBorderType;
+
+
+
+
+
+struct IRCGLine {
+
+	CGPoint origin;
+	CGPoint destination;
+	CGFloat width;
+	UIColor *color;
+
+}; typedef struct IRCGLine IRCGLine;
+
+
+
+
+
+struct IRCGBorder {
+	
+	IRCGEdge edge;
+	IRCGBorderType type;
+	CGFloat width;
+	UIColor *color;
+
+}; typedef struct IRCGBorder IRCGBorder;
+
+
+
+
+
+struct IRCGShadow {
+
+	IRCGEdge edge;
+	CGPoint offset;
+	CGFloat spread;
+	UIColor *color;
+	
+}; typedef struct IRCGShadow IRCGShadow;
 
 
 
@@ -133,6 +201,100 @@ CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
 	);
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# pragma mark IRCGLine & IRCGBorder
+
+
+
+
+
+CG_INLINE IRCGLine IRCGLineMake(CGPoint origin, CGPoint destination, CGFloat width, UIColor *color) {
+
+	IRCGLine theLine;
+	
+	theLine.origin = origin;
+	theLine.destination = destination;
+	theLine.width = width;
+	theLine.color = [color retain];
+	
+	return theLine;
+	
+}
+
+
+
+
+
+CG_INLINE IRCGBorder IRCGBorderMake (IRCGEdge edge, IRCGBorderType type, CGFloat width, UIColor *color) {
+	
+	IRCGBorder theBorder;
+	
+	theBorder.edge = edge;
+	theBorder.type = type;
+	theBorder.width = width;
+	theBorder.color = [color retain];
+	
+	return theBorder;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# pragma mark IRCGShadow
+
+
+
+
+
+CG_INLINE IRCGShadow IRCGShadowMake(IRCGEdge edge, CGPoint offset, CGFloat spread, UIColor *color) {
+
+	IRCGShadow theShadow;
+	
+	theShadow.edge = edge;
+	theShadow.offset = offset;
+	theShadow.spread = spread;
+	theShadow.color = [color retain];
+	
+	return theShadow;
+	
+}
+
 
 
 
