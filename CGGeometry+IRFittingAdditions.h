@@ -326,6 +326,22 @@ CG_INLINE IRCGShadow IRCGShadowMake(IRCGEdge edge, CGPoint offset, CGFloat sprea
 
 
 
+CG_INLINE BOOL IRCGPointIsAbovePoint(CGPoint aPoint, CGPoint referencedPoint, IRCGFlippingFlag flipped) {
+	
+	if (flipped) return (aPoint.y < referencedPoint.y);
+	return (aPoint.y > referencedPoint.y);
+	
+}
+
+
+
+
+
+
+
+
+
+
 # pragma mark Fitting CGSizes & CGRects
 
 
