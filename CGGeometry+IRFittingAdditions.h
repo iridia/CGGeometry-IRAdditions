@@ -326,6 +326,12 @@ CG_INLINE IRCGShadow IRCGShadowMake(IRCGEdge edge, CGPoint offset, CGFloat sprea
 
 
 
+# pragma mark Fitting CGSizes & CGRects
+
+
+
+
+
 CG_INLINE CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
 
 	float enclosedRectAspectRatio = enclosedSize.width / enclosedSize.height;
@@ -376,6 +382,8 @@ CG_INLINE CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosing
 
 
 CG_INLINE CGRect IRCGRectGetInsetRect (CGRect originalRect, CGFloat thePadding) {
+
+	if (thePadding == 0) return originalRect;
 
 	return CGRectMake(
 	
