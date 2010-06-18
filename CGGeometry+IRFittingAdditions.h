@@ -91,9 +91,9 @@ enum {
 
 typedef enum {
 	
-	IRCGBorderTypeInset,
-	IRCGBorderTypeNormal,
-	IRCGBorderTypeOutset
+	IRCGBorderTypeInset = 0,
+	IRCGBorderTypeNormal = -1,
+	IRCGBorderTypeOutset = -2
 	
 } IRCGBorderType;
 
