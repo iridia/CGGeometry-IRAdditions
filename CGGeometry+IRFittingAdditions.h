@@ -71,14 +71,19 @@ typedef struct IRCGDelta {
 
 
 
-typedef enum {
+enum {
 	
-	IRCGEdgeTop,
-	IRCGEdgeRight,
-	IRCGEdgeBottom,
-	IRCGEdgeLeft
+	IRCGEdgeNone = 0,
 	
-} IRCGEdge;
+	IRCGEdgeTop = 1 << 0,
+	IRCGEdgeBottom = 1 << 1,
+	IRCGEdgeHorizontal = (IRCGEdgeTop | IRCGEdgeBottom),
+	
+	IRCGEdgeLeft = 1 << 2,
+	IRCGEdgeRight = 1 << 3,
+	IRCGEdgeVertical = (IRCGEdgeLeft | IRCGEdgeRight),
+
+}; typedef NSUInteger IRCGEdge;
 
 
 
