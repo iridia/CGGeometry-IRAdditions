@@ -385,7 +385,7 @@ CG_INLINE CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosing
 	return CGRectMake(
 				
 		enclosingRect.origin.x + ((enclosingRect.size.width - currentEnclosedSizeSize.width) / 2), 
-		enclosingRect.origin.y + ((enclosingRect.size.height - currentEnclosedSizeSize.height) / 2), 
+		enclosingRect.origin.y + (flipped ? 1 : -1) * ((enclosingRect.size.height - currentEnclosedSizeSize.height) / 2), 
 		currentEnclosedSizeSize.width, 
 		currentEnclosedSizeSize.height
 				
