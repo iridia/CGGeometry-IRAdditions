@@ -446,6 +446,23 @@ CG_INLINE CGPoint IRCGRectGetLocalMidXY(CGRect theRect) {
 
 
 
+CG_INLINE CGRect IRCGRectMoveToPoint(CGRect theRect, CGPoint thePoint) {
+
+	return CGRectMake(
+
+		thePoint.x, 
+		thePoint.y, 
+		theRect.size.width, 
+		theRect.size.height
+		
+	);
+
+}
+
+
+
+
+
 
 
 
