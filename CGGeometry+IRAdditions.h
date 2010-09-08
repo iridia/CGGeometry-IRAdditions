@@ -1,5 +1,5 @@
 //
-//  CGGeometry+IRFittingAdditions.h
+//  CGGeometry+IRAdditions.h
 //  Tarotie
 //
 //  Created by Evadne Wu on 6/1/10.
