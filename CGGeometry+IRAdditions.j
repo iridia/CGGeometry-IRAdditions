@@ -27,7 +27,26 @@
 		aRect.origin.x - offsetLeft,
 		aRect.origin.y - offsetBottom,
 		aRect.size.width + offsetLeft + offsetRight,
-		aRect.size.height + offsetBotttom + offsetTop,
+		aRect.size.height + offsetBotttom + offsetTop
+	
+	);
+
+}
+
+
+
+
+
+/* (void) */ function CGRectDump (aRect, optionalText) {
+
+	CPLog(
+		
+		((!!optionalText ? optionalText + @" — " : @"") + @" — %f by %f at %f, %f"), 
+	
+		aRect.size.width,
+		aRect.size.height,
+		aRect.origin.x,
+		aRect.origin.y
 	
 	);
 
