@@ -78,4 +78,39 @@
 
 
 
+
+//!	Deltas
+
+	/* (CGDelta) */ function CGDeltaMake (fromPoint, toPoint) {
+		
+		return {
+			
+			x: toPoint.x - fromPoint.x,
+			y: toPoint.y - fromPoint.y			
+		
+		}
+
+	}
+	
+	
+	
+	
+	/* (CGPoint) */ function CGPointOffset (thePoint, offsetDelta, invert) {
+
+		if (!invert) invert = false;
+		
+		var ratio = invert ? -1 : 1;
+		
+		return CGPointMake(
+		
+			thePoint.x + offsetDelta.x * ratio,
+			thePoint.y + offsetDelta.y * ratio
+			
+		);
+
+	}
+	
+	
+	
+	
 	
