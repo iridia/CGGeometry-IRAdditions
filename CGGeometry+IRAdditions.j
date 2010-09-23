@@ -14,7 +14,62 @@
 		
 	);
 	
-} 
+}
+
+
+
+
+
+kCGAlignmentPointRefMinXMask = 1 << 0;
+kCGAlignmentPointRefMidXMask = 1 << 1;
+kCGAlignmentPointRefMaxXMask = 1 << 2;
+kCGAlignmentPointRefMinYMask = 1 << 3;
+kCGAlignmentPointRefMidYMask = 1 << 4;
+kCGAlignmentPointRefMaxYMask = 1 << 5;
+
+kCGAlignmentPointRefTopLeft = kCGAlignmentPointRefMinXMask | kCGAlignmentPointRefMinYMask;
+kCGAlignmentPointRefTop = kCGAlignmentPointRefMidXMask | kCGAlignmentPointRefMinYMask;
+kCGAlignmentPointRefTopRight = kCGAlignmentPointRefMaxXMask | kCGAlignmentPointRefMinYMask;
+kCGAlignmentPointRefLeft = kCGAlignmentPointRefMinXMask | kCGAlignmentPointRefMidYMask;
+kCGAlignmentPointRefCenter = kCGAlignmentPointRefMidXMask | kCGAlignmentPointRefMidYMask;
+kCGAlignmentPointRefRight = kCGAlignmentPointRefMaxXMask | kCGAlignmentPointRefMidYMask;
+kCGAlignmentPointRefBottomLeft = kCGAlignmentPointRefMinXMask | kCGAlignmentPointRefMaxYMask;
+kCGAlignmentPointRefBottom = kCGAlignmentPointRefMidXMask | kCGAlignmentPointRefMaxYMask;
+kCGAlignmentPointRefBottomRight = kCGAlignmentPointRefMaxXMask | kCGAlignmentPointRefMaxYMask;
+
+/* (CGRect) */ function CGAlignedRectMake ( /* (CGRect) */ movedRect, /* (kCGAlignmentPointRef) */ movedPointRef, /* (CGRect) */ referenceRect, /* (kCGAlignmentPointRef) */ referencePointRef) {
+	
+	var fromPoint = CGPointFromPointRefInRect(movedRect, movedPointRef);
+	var toPoint = CGPointFromPointRefInRect(referenceRect, referencePointRef);
+	
+	return CGRectTranslate(
+		
+		movedRect,
+		CGDeltaMake(fromPoint, toPoint)
+		
+	);
+	
+}
+
+
+
+
+
+/* (CGPoint) */ function CGPointFromPointRefInRect ( /* (CGRect) */ aRect, /* (CGAlignmentPointRef) */ pointRef) {
+	
+	var responseX = 0;
+	if (pointRef & kCGAlignmentPointRefMinXMask) responseX += CGRectGetMinX(aRect);
+	if (pointRef & kCGAlignmentPointRefMidXMask) responseX += CGRectGetMidX(aRect);
+	if (pointRef & kCGAlignmentPointRefMaxXMask) responseX += CGRectGetMaxX(aRect);
+	
+	var responseY = 0;
+	if (pointRef & kCGAlignmentPointRefMinYMask) responseY += CGRectGetMinY(aRect);
+	if (pointRef & kCGAlignmentPointRefMidYMask) responseY += CGRectGetMidY(aRect);
+	if (pointRef & kCGAlignmentPointRefMaxYMask) responseY += CGRectGetMaxY(aRect);
+	
+	return CGPointMake(responseX, responseY);
+	
+}
 
 
 
@@ -166,6 +221,19 @@
 			"leftOffset": leftOffset
 			
 		};
+		
+	}
+	
+	/* (CGRectOffset) */ function CGRectOffsetInvert (offset) {
+		
+		return CGRectOffsetMake(
+			
+			-1 * offset.topOffset,
+			-1 * offset.rightOffset,
+			-1 * offset.bottomOffset,
+			-1 * offset.leftOffset
+			
+		)
 		
 	}
 	
