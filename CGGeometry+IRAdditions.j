@@ -44,12 +44,35 @@
 	return CGRectMake(
 	
 		aRect.origin.x - offsetLeft,
-		aRect.origin.y - offsetBottom,
+		aRect.origin.y - offsetTop,
 		aRect.size.width + offsetLeft + offsetRight,
-		aRect.size.height + offsetBotttom + offsetTop
+		aRect.size.height + offsetBottom + offsetTop
 	
 	);
 
+}
+
+/* (CGRect) */ function CGRectOffset (aRect, anOffset) {
+
+	return CGRectInsetFromEdges(aRect, anOffset.topOffset, anOffset.rightOffset, anOffset.bottomOffset, anOffset.leftOffset)
+
+}
+
+
+
+
+
+/* (CGRect) */ function CGRectTranslate (aRect, aDelta) {
+	
+	return CGRectMake(
+	
+		aRect.origin.x + aDelta.x,
+		aRect.origin.y + aDelta.y,
+		aRect.size.width,
+		aRect.size.height
+		
+	);
+	
 }
 
 
@@ -127,6 +150,29 @@
 			
 		);
 
+	}
+	
+	
+	
+	
+	
+	/* (CGRectOffset) */ function CGRectOffsetMake (topOffset, rightOffset, bottomOffset, leftOffset) {
+		
+		return {
+			
+			"topOffset": topOffset,
+			"rightOffset": rightOffset,
+			"bottomOffset": bottomOffset,
+			"leftOffset": leftOffset
+			
+		};
+		
+	}
+	
+	/* (CGRectOffset) */ function CGRectOffsetZero () {
+		
+		return CGRectOffsetMake(0, 0, 0, 0);
+		
 	}
 	
 	
