@@ -20,6 +20,25 @@
 
 
 
+/* (CGPoint) */ function CGPointCenterOfPoints () {
+	
+	if (arguments.length == 0) return CGPointMakeZero();
+	
+	var x = 0, y = 0; for(var i = 0; i < arguments.length; i++) {
+		
+		x += arguments[i].x;
+		y += arguments[i].y;
+		
+	}
+	
+	return CGPointMake(x / i, y / i);
+	
+}
+
+
+
+
+
 /* (CGRect) */ function CGRectInsetFromEdges (aRect, offsetTop, offsetRight, offsetBottom, offsetLeft) {
 
 	return CGRectMake(
