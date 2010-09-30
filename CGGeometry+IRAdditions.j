@@ -149,6 +149,19 @@ kCGAlignmentPointRefBottomRight = kCGAlignmentPointRefMaxXMask | kCGAlignmentPoi
 
 }
 
+/* (void) */ function CGPointDump (aPoint, optionalText) {
+
+	CPLog(
+		
+		((!!optionalText ? optionalText + @" — " : @"") + @" — %f, %f"), 
+	
+		aPoint.x,
+		aPoint.y
+	
+	);
+
+}
+
 
 
 
