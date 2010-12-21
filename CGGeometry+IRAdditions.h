@@ -589,6 +589,23 @@ CG_INLINE IRCGTranslateAlignType IRCGTranslateAlignTypeFromEdge (IRCGEdge edge) 
 
 
 
+CG_INLINE CGRect IRCGRectAlignToPixelGrid (CGRect inRect) {
+
+	CGRect returnedRect = inRect;
+	
+	returnedRect.origin.x = floorf(returnedRect.origin.x);
+	returnedRect.origin.y = floorf(returnedRect.origin.y);
+	returnedRect.size.width = ceilf(returnedRect.size.width);
+	returnedRect.size.height = ceilf(returnedRect.size.height);
+	
+	return returnedRect;
+
+}
+
+
+
+
+
 CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
 
 	CGPoint originPoint;
