@@ -721,4 +721,14 @@ CG_INLINE CGRect IRCGRectScale (CGRect theRect, CGFloat width, CGFloat height, I
 
 
 
+CG_INLINE CGRect IRCGRectMakeWithWidthAndHeight (CGFloat inWidth, CGFloat inHeight) {
+
+	return (CGRect) { 0, 0, inWidth, inHeight };
+
+}
+
+
+
+
+
 #endif
