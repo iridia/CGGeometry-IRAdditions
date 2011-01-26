@@ -161,36 +161,6 @@ struct IRCGShadow {
 
 
 
-CG_INLINE void IRCGDumpRect(CGRect theRect, NSString *theMessage) {
-	
-	NSLog(@"%@ = (%f %f; %f %f)", theMessage, theRect.origin.x, theRect.origin.y, theRect.size.width, theRect.size.height);
-	
-}
-
-
-
-
-
-CG_INLINE void IRCGDumpSize(CGSize theSize, NSString *theMessage) {
-	
-	NSLog(@"%@ = (%f %f)", theMessage, theSize.width, theSize.height);
-	
-}
-
-
-
-
-
-CG_INLINE void IRCGDumpPoint(CGPoint thePoint, NSString *theMessage) {
-	
-	NSLog(@"%@ = (%f %f)", theMessage, thePoint.x, thePoint.y);
-	
-}
-
-
-
-
-
 CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
 	
 	NSLog(@"%@ = (%f %f %f; %f %f %f)", theMessage, 
@@ -726,6 +696,32 @@ CG_INLINE CGRect IRCGRectMakeWithWidthAndHeight (CGFloat inWidth, CGFloat inHeig
 	return (CGRect) { 0, 0, inWidth, inHeight };
 
 }
+
+
+
+
+
+#define irDump(aCGStruct) NSLog(@"%@", irDumpImpl(@encode(__typeof__(aCGStruct)), &aCGStruct))
+#define irDumpLog(aCGStruct,...) NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(aCGStruct)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__])
+
+CG_INLINE NSString* irDumpImpl (const char *encodedString, void * aPointer) {
+
+	if (strcmp(encodedString, @encode(CGRect)) == 0)
+	return NSStringFromCGRect(*(CGRect*)aPointer);
+
+	if (strcmp(encodedString, @encode(CGPoint)) == 0)
+	return NSStringFromCGPoint(*(CGPoint*)aPointer);
+	
+	if (strcmp(encodedString, @encode(CGSize)) == 0)
+	return NSStringFromCGSize(*(CGSize*)aPointer);
+	
+	return @"(Unknown)";
+
+}
+
+#define IRCGDumpRect(aRect, aMessage) irDumpLog(aRect, aMessage)
+#define IRCGDumpPoint(aPoint, aMessage) irDumpLog(aPoint, aMessage)
+#define IRCGDumpSize(aSize, aMessage) irDumpLog(aSize, aMessage)
 
 
 
