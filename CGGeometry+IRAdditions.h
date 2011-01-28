@@ -701,8 +701,8 @@ CG_INLINE CGRect IRCGRectMakeWithWidthAndHeight (CGFloat inWidth, CGFloat inHeig
 
 
 
-#define irDump(aCGStruct) NSLog(@"%@", irDumpImpl(@encode(__typeof__(aCGStruct)), &aCGStruct))
-#define irDumpLog(aCGStruct,...) NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(aCGStruct)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__])
+#define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
+#define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())
 
 CG_INLINE NSString* irDumpImpl (const char *encodedString, void * aPointer) {
 
