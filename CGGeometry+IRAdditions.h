@@ -6,725 +6,170 @@
 //  Copyright 2010 Iridia Productions. All rights reserved.
 //
 
-
-
-
-
-#ifndef CGGEOMETRY_IRIDIA_FITTING_ADDITIONS_
-#define CGGEOMETRY_IRIDIA_FITTING_ADDITIONS_
-
 #include <CoreGraphics/CGBase.h>
 #include <CoreFoundation/CFDictionary.h>
 
+#ifndef __CGGeometry_IRAdditions_Defines__
+#define __CGGeometry_IRAdditions_Defines__
 
-
-
-
-
-
-
-
-
-# pragma mark Structures and Types
-
-
-
-
-
-typedef enum {
-
-	IRCGTranslateAlignTypeCenter,
-	IRCGTranslateAlignTypeTop,
-	IRCGTranslateAlignTypeTopRight,
-	IRCGTranslateAlignTypeRight,
-	IRCGTranslateAlignTypeBottomRight,
-	IRCGTranslateAlignTypeBottom,
-	IRCGTranslateAlignTypeBottomLeft,
-	IRCGTranslateAlignTypeLeft,
-	IRCGTranslateAlignTypeTopLeft
-	
-} IRCGTranslateAlignType;
-
-
-
-
-
-typedef enum {
-	
-	IRCGFlippingFlagFlipped = YES,
-	IRCGFlippingFlagUnflipped = NO	
-	
-} IRCGFlippingFlag;
-
-
-
-
-
-typedef struct IRCGDelta {
-
-	CGFloat x;
-	CGFloat y;
-
-} IRCGDelta;
-
-
-
-
+typedef enum { irCenter, irTop, irTopRight, irRight, irBottomRight, irBottom, irBottomLeft, irLeft, irTopLeft } IRAnchor;
+typedef enum { irUnflipped = NO, irFlipped = YES } irFlipping;
+typedef enum { IRBorderTypeInset, IRBorderTypeNormal, IRBorderTypeOutset } IRBorderType;
+typedef CGPoint IRDelta;
 
 enum {
 	
-	IRCGEdgeNone = 0,
+	IREdgeNone = 0,
+	IREdgeTop = 1 << 0,
+	IREdgeBottom = 1 << 1,	
+	IREdgeLeft = 1 << 2,
+	IREdgeRight = 1 << 3,
 	
-	IRCGEdgeTop = 1 << 0,
-	IRCGEdgeBottom = 1 << 1,
-	IRCGEdgeHorizontal = (IRCGEdgeTop | IRCGEdgeBottom),
-	
-	IRCGEdgeLeft = 1 << 2,
-	IRCGEdgeRight = 1 << 3,
-	IRCGEdgeVertical = (IRCGEdgeLeft | IRCGEdgeRight),
+	IREdgeHorizontal = (IREdgeTop | IREdgeBottom),
+	IREdgeVertical = (IREdgeLeft | IREdgeRight),
 
-}; typedef NSUInteger IRCGEdge;
+}; typedef NSUInteger IREdge;
 
-
-
-
-
-typedef enum {
-	
-	IRCGBorderTypeInset = 0,
-	IRCGBorderTypeNormal = -1,
-	IRCGBorderTypeOutset = -2
-	
-} IRCGBorderType;
-
-
-
-
-
-struct IRCGLine {
+struct IRLine {
 
 	CGPoint origin;
 	CGPoint destination;
 	CGFloat width;
 	UIColor *color;
 
-}; typedef struct IRCGLine IRCGLine;
+}; typedef struct IRLine IRLine;
 
 
-
-
-
-struct IRCGBorder {
+struct IRBorder {
 	
-	IRCGEdge edge;
-	IRCGBorderType type;
+	IREdge edge;
+	IRBorderType type;
 	CGFloat width;
 	UIColor *color;
 
-}; typedef struct IRCGBorder IRCGBorder;
+}; typedef struct IRBorder IRBorder;
 
 
+struct IRShadow {
 
-
-
-struct IRCGShadow {
-
-	IRCGEdge edge;
+	IREdge edge;
 	CGPoint offset;
 	CGFloat spread;
 	UIColor *color;
 	
-}; typedef struct IRCGShadow IRCGShadow;
+}; typedef struct IRShadow IRShadow;
 
 
+extern IRLine IRLineMake(CGPoint origin, CGPoint destination, CGFloat width, UIColor *color);
+extern IRBorder IRBorderMake (IREdge edge, IRBorderType type, CGFloat width, UIColor *color);
+extern IRShadow IRShadowMake(IREdge edge, CGPoint offset, CGFloat spread, UIColor *color);
 
+#endif
 
 
 
 
 
+#ifndef __CGGeometry_IRAdditions__
+#define __CGGeometry_IRAdditions__
 
+extern BOOL irCGPointIsAbovePoint (CGPoint aPoint, CGPoint referencedPoint, BOOL flipped);
 
+extern CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, BOOL flipped);
 
+extern CGPoint irCGRectGetCenterOfRectBounds (CGRect aRect);
+extern CGPoint irCGRectGetCenterOfRectFrame (CGRect aRect);
 
+extern CGRect irCGRectWithRectAndOrigin (CGRect aRect, CGPoint anOrigin);
 
+extern IRDelta IRDeltaMake (CGFloat deltaX, CGFloat deltaY);
+extern IRDelta IRDeltaFromPoints (CGPoint fromPoint, CGPoint toPoint);
 
-
-
-
-
-
-
-# pragma mark Introspection
-
-
-
-
-
-CG_INLINE void IRCGDumpExtremes(CGRect theRect, NSString *theMessage) {
-	
-	NSLog(@"%@ = (%f %f %f; %f %f %f)", theMessage, 
-	      
-	      CGRectGetMinX(theRect),
-	      CGRectGetMidX(theRect),
-	      CGRectGetMaxX(theRect),
-	      
-	      CGRectGetMinY(theRect),
-	      CGRectGetMidY(theRect),
-	      CGRectGetMaxY(theRect)
-	      
-	);
-	
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# pragma mark IRCGLine & IRCGBorder
-
-
-
-
-
-CG_INLINE IRCGLine IRCGLineMake(CGPoint origin, CGPoint destination, CGFloat width, UIColor *color) {
-
-	IRCGLine theLine;
-	
-	theLine.origin = origin;
-	theLine.destination = destination;
-	theLine.width = width;
-	theLine.color = [color retain];
-	
-	return theLine;
-	
-}
-
-
-
-
-
-CG_INLINE IRCGBorder IRCGBorderMake (IRCGEdge edge, IRCGBorderType type, CGFloat width, UIColor *color) {
-	
-	IRCGBorder theBorder;
-	
-	theBorder.edge = edge;
-	theBorder.type = type;
-	theBorder.width = width;
-	theBorder.color = [color retain];
-	
-	return theBorder;
-	
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# pragma mark IRCGShadow
-
-
-
-
-
-CG_INLINE IRCGShadow IRCGShadowMake(IRCGEdge edge, CGPoint offset, CGFloat spread, UIColor *color) {
-
-	IRCGShadow theShadow;
-	
-	theShadow.edge = edge;
-	theShadow.offset = offset;
-	theShadow.spread = spread;
-	theShadow.color = [color retain];
-	
-	return theShadow;
-	
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# pragma mark Fitting CGSizes & CGRects
-
-
-
-
-
-CG_INLINE BOOL IRCGPointIsAbovePoint(CGPoint aPoint, CGPoint referencedPoint, IRCGFlippingFlag flipped) {
-	
-	if (flipped) return (aPoint.y < referencedPoint.y);
-	return (aPoint.y > referencedPoint.y);
-	
-}
-
-
-
-
-
-
-
-
-
-
-# pragma mark Fitting CGSizes & CGRects
-
-
-
-
-
-CG_INLINE CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRect, CGFloat minimalPadding, IRCGFlippingFlag flipped) {
-
-	float enclosedRectAspectRatio = enclosedSize.width / enclosedSize.height;
-	
-	CGSize maximumEnclosedSizeSize = CGSizeMake(
-					    
-		enclosingRect.size.width - (2 * minimalPadding),
-		enclosingRect.size.height - (2 * minimalPadding)
-    
-	);
-	
-	CGSize currentEnclosedSizeSize = CGSizeMake(
-	
-		enclosedSize.width,
-		enclosedSize.height
-	
-	);
-	
-	if (currentEnclosedSizeSize.width > maximumEnclosedSizeSize.width)
-	currentEnclosedSizeSize = CGSizeMake(
-	
-		maximumEnclosedSizeSize.width,
-		maximumEnclosedSizeSize.width / enclosedRectAspectRatio
-		
-	);
-	
-	if (currentEnclosedSizeSize.height > maximumEnclosedSizeSize.height)
-	currentEnclosedSizeSize = CGSizeMake(
-	
-		maximumEnclosedSizeSize.height * enclosedRectAspectRatio, 
-		maximumEnclosedSizeSize.height
-	
-	);
-	
-	return CGRectMake(
-				
-		enclosingRect.origin.x + ((enclosingRect.size.width - currentEnclosedSizeSize.width) / 2), 
-		enclosingRect.origin.y + (flipped ? 1 : -1) * ((enclosingRect.size.height - currentEnclosedSizeSize.height) / 2), 
-		currentEnclosedSizeSize.width, 
-		currentEnclosedSizeSize.height
-				
-	);
-
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectGetInsetRect (CGRect originalRect, CGFloat thePadding) {
-
-	if (thePadding == 0) return originalRect;
-
-	return CGRectMake(
-	
-		originalRect.origin.x + (1 * thePadding),
-		originalRect.origin.y + (1 * thePadding),
-		originalRect.size.width + (-2 * thePadding),
-		originalRect.size.height + (-2 * thePadding)
-	
-	);
-
-}
-
-
-
-
-
-CG_INLINE CGPoint IRCGRectGetGlobalMidXY(CGRect theRect) {
-	
-	return CGPointMake(
-
-		theRect.origin.x + CGRectGetMaxX(theRect),
-		theRect.origin.y + CGRectGetMaxY(theRect)
-
-	);
-	
-}
-
-
-
-
-
-CG_INLINE CGPoint IRCGRectGetLocalMidXY(CGRect theRect) {
-	
-	return CGPointMake(
-			   
-		theRect.size.width / 2,
-		theRect.size.height / 2
-
-	);
-	
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectMoveToPoint(CGRect theRect, CGPoint thePoint) {
-
-	return CGRectMake(
-
-		thePoint.x, 
-		thePoint.y, 
-		theRect.size.width, 
-		theRect.size.height
-		
-	);
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# pragma mark Delta & Translating
-
-
-
-
-
-CG_INLINE CGRect IRCGRectTranslate (CGRect theRect, CGFloat translateX, CGFloat translateY) {
-
-	return CGRectMake(
-	
-		theRect.origin.x + translateX, 
-		theRect.origin.y + translateY, 
-		theRect.size.width, 
-		theRect.size.height
-		
-	);
-
-}
-
-
-
-
-
-
-CG_INLINE IRCGDelta IRCGDeltaMake (CGFloat deltaX, CGFloat deltaY) {
-
-	IRCGDelta delta;
-	
-	delta.x = deltaX;
-	delta.y = deltaY;
-
-	return delta;
-
-}
-
-
-
-
-
-CG_INLINE IRCGDelta IRCGDeltaMakeFromPoints (CGPoint origin, CGPoint destination) {
-
-	IRCGDelta delta;
-
-	delta.x = destination.x - origin.x;
-	delta.y = destination.y - origin.y;
-
-	return delta;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# pragma mark Aligning & Scaling Rects
-
-
-
-
-CG_INLINE IRCGTranslateAlignType IRCGTranslateAlignTypeFromEdge (IRCGEdge edge) {
-	
-	switch (edge) {
-
-		case IRCGEdgeTop:
-
-			return IRCGTranslateAlignTypeTop;
-			break;
-		
-		case IRCGEdgeRight:
-			
-			return IRCGTranslateAlignTypeRight;
-			break;
-			
-		case IRCGEdgeBottom:
-			
-			return IRCGTranslateAlignTypeBottom;
-			break;
-			
-		case IRCGEdgeLeft:
-			
-			return IRCGTranslateAlignTypeLeft;
-			break;
-			
-		default:
-		
-			return IRCGTranslateAlignTypeCenter;
-			break;
-
-	}
-	
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectAlignToPixelGrid (CGRect inRect) {
-
-	CGRect returnedRect = inRect;
-	
-	returnedRect.origin.x = floorf(returnedRect.origin.x);
-	returnedRect.origin.y = floorf(returnedRect.origin.y);
-	returnedRect.size.width = ceilf(returnedRect.size.width);
-	returnedRect.size.height = ceilf(returnedRect.size.height);
-	
-	return returnedRect;
-
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRCGTranslateAlignType alignType, IRCGFlippingFlag flipped) {
-
-	CGPoint originPoint;
-	CGPoint destinationPoint;
-	
-	CGFloat (* processorX)(CGRect) = NULL;
-	CGFloat (* processorY)(CGRect) = NULL;
-	
-	CGFloat (* processorYTop)(CGRect) = NULL;
-	CGFloat (* processorYBottom)(CGRect) = NULL;
-	
-	
-	if (flipped) {
-		
-		processorYTop = &CGRectGetMinY;
-		processorYBottom = &CGRectGetMaxY;
-		
-	} else {
-		
-		processorYTop = &CGRectGetMaxY;
-		processorYBottom = &CGRectGetMaxY;
-		
-	}
-	
-	
-	switch (alignType) {
-
-		case IRCGTranslateAlignTypeTopLeft:
-		case IRCGTranslateAlignTypeLeft:
-		case IRCGTranslateAlignTypeBottomLeft:
-		
-			processorX = &CGRectGetMinX;
-			break;
-			
-		case IRCGTranslateAlignTypeTop:
-		case IRCGTranslateAlignTypeCenter:
-		case IRCGTranslateAlignTypeBottom:
-		
-			processorX = &CGRectGetMidX;
-			break;
-		
-		case IRCGTranslateAlignTypeTopRight:
-		case IRCGTranslateAlignTypeRight:
-		case IRCGTranslateAlignTypeBottomRight:
-		
-			processorX = &CGRectGetMaxX;
-			break;
-			
-	}
-	
-	
-	switch (alignType) {
-
-		case IRCGTranslateAlignTypeBottomLeft:
-		case IRCGTranslateAlignTypeBottom:
-		case IRCGTranslateAlignTypeBottomRight:
-		
-			processorY = processorYBottom;
-			break;
-			
-		case IRCGTranslateAlignTypeLeft:
-		case IRCGTranslateAlignTypeCenter:
-		case IRCGTranslateAlignTypeRight:
-		
-			processorY = &CGRectGetMidY;
-			break;
-		
-		case IRCGTranslateAlignTypeTopLeft:
-		case IRCGTranslateAlignTypeTop:
-		case IRCGTranslateAlignTypeTopRight:
-
-			processorY = processorYTop;
-			break;
-			
-	}
-	
-	
-	originPoint = CGPointMake(processorX(theRect), processorY(theRect));
-	destinationPoint = CGPointMake(processorX(referenceRect), processorY(referenceRect));
-	
-	IRCGDelta theDelta = IRCGDeltaMakeFromPoints(originPoint, destinationPoint);
-	
-	return IRCGRectTranslate(theRect, theDelta.x, theDelta.y);
-
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectScale (CGRect theRect, CGFloat width, CGFloat height, IRCGTranslateAlignType alignType, BOOL flipped) {
-
-	return IRCGRectAlignToRect(
-	
-		CGRectMake(
-	
-			theRect.origin.x, 
-			theRect.origin.y, 
-			width, 
-			height
-			
-		),
-	
-		theRect, 
-		alignType,
-		flipped
-		
-	);
-
-}
-
-
-
-
-
-CG_INLINE CGRect IRCGRectMakeWithWidthAndHeight (CGFloat inWidth, CGFloat inHeight) {
-
-	return (CGRect) { 0, 0, inWidth, inHeight };
-
-}
-
-
-
-
+extern IRAnchor IRAnchorForEdge (IREdge edge);
+extern CGPoint irCGRectAnchor (CGRect aRect, IRAnchor anchor, BOOL flipped);
+extern CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRAnchor anchor, BOOL flipped);
 
 #define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
+
 #define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())
 
-CG_INLINE NSString* irDumpImpl (const char *encodedString, void * aPointer) {
+extern NSString* irDumpImpl (const char *encodedString, void * aPointer);
 
-	if (strcmp(encodedString, @encode(CGRect)) == 0)
-	return NSStringFromCGRect(*(CGRect*)aPointer);
+#endif
 
-	if (strcmp(encodedString, @encode(CGPoint)) == 0)
-	return NSStringFromCGPoint(*(CGPoint*)aPointer);
-	
-	if (strcmp(encodedString, @encode(CGSize)) == 0)
-	return NSStringFromCGSize(*(CGSize*)aPointer);
-	
-	return @"(Unknown)";
 
-}
+
+
+
+
+
+
+
+
+#ifndef __CGGeometry_IRAdditions_Compatibility__
+#define __CGGeometry_IRAdditions_Compatibility__
+
+#define IRCGEdge IREdge
+#define IRCGEdgeNone IREdgeNone
+#define IRCGEdgeTop IREdgeTop
+#define IRCGEdgeBottom IREdgeBottom
+#define IRCGEdgeRight IREdgeRight
+#define IRCGEdgeLeft IREdgeLeft
+#define IRCGEdgeHorizontal IREdgeHorizontal
+#define IRCGEdgeVertical IREdgeVertical
+
+#define IRCGLine IRLine
+#define IRCGBorder IRBorder
+#define IRCGShadow IRShadow
+
+#define IRCGLineMake IRLineMake
+#define IRCGBorderMake IRBorderMake
+#define IRCGShadowMake IRShadowMake
+
+#define IRCGBorderType IRBorderType
+#define IRCGBorderTypeOutset IRBorderTypeOutset
+#define IRCGBorderTypeInset IRBorderTypeInset
+#define IRCGBorderTypeNormal IRBorderTypeNormal
+
+#define IRCGTranslateAlignType IRAnchor
+#define IRCGTranslateAlignTypeCenter irCenter
+#define IRCGTranslateAlignTypeTop irTop
+#define IRCGTranslateAlignTypeTopRight irTopRight
+#define IRCGTranslateAlignTypeRight irRight
+#define IRCGTranslateAlignTypeBottomRight irBottomRight
+#define IRCGTranslateAlignTypeBottom irBottom
+#define IRCGTranslateAlignTypeBottomLeft irBottomLeft
+#define IRCGTranslateAlignTypeLeft irLeft
+#define IRCGTranslateAlignTypeTopLeft irTopLeft 
+
+#define IRCGFlippingFlag irFlipping
+#define IRCGFlippingFlagFlipped irFlipped
+#define IRCGFlippingFlagUnflipped irUnflipped
+
+#define IRCGTranslateAlignTypeFromEdge IRAnchorForEdge
+
+#define IRCGRectAlignToPixelGrid CGRectIntegral
+
+#define IRCGPointIsAbovePoint irCGPointIsAbovePoint
+
+#define IRCGDelta IRDelta
+
+#define IRCGRectGetGlobalMidXY irCGRectGetCenterOfRectFrame
+#define IRCGRectGetLocalMidXY irCGRectGetCenterOfRectBounds
+
+#define IRCGRectGetInsetRect(aRect, aPadding) CGRectInset(aRect, thePadding, thePadding)
+
+#define IRCGRectMoveToPoint irCGRectWithRectAndOrigin
+#define IRCGRectTranslate CGRectOffset
+#define IRCGDeltaMakeFromPoints IRDeltaFromPoints
+
+#define IRCGRectMakeWithWidthAndHeight(aWidth, aHeight) CGRectMake(0, 0, aWidth, aHeight)
+
+#define IRCGRectScale(aRect, aWidth, aHeight, anAnchor, flipped) IRCGRectAlignToRect(IRCGRectMakeWithWidthAndHeight(aWidth, aHeight), aRect, anAnchor, flipped)
 
 #define IRCGDumpRect(aRect, aMessage) irDumpLog(aRect, aMessage)
 #define IRCGDumpPoint(aPoint, aMessage) irDumpLog(aPoint, aMessage)
 #define IRCGDumpSize(aSize, aMessage) irDumpLog(aSize, aMessage)
-
-
-
-
+#define IRCGDumpExtremes(aRect, aMessage) irDumpLog(aRect, aMessage)
 
 #endif
