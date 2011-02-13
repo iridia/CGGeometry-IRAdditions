@@ -89,6 +89,8 @@ extern IRAnchor IRAnchorForEdge (IREdge edge);
 extern CGPoint irCGRectAnchor (CGRect aRect, IRAnchor anchor, BOOL flipped);
 extern CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRAnchor anchor, BOOL flipped);
 
+extern CGFloat irDistanceFromRectToPoint (CGRect aRect, CGPoint aPoint, IRAnchor anchor);
+
 #define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
 
 #define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())

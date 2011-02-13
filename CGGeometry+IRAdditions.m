@@ -253,6 +253,18 @@ CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRAnchor ancho
 
 
 
+CGFloat irDistanceFromRectToPoint (CGRect aRect, CGPoint aPoint, IRAnchor anchor) {
+
+	IRDelta aDelta = IRDeltaFromPoints(irCGRectAnchor(aRect, anchor, YES), aPoint);
+	
+	return sqrt(pow(aDelta.x, 2) + pow(aDelta.y, 2));
+
+}
+
+
+
+
+
 NSString * irDumpImpl (const char *encodedString, void * aPointer) {
 
 	if (strcmp(encodedString, @encode(CGRect)) == 0)
