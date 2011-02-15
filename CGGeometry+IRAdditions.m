@@ -202,6 +202,12 @@ IRDelta IRDeltaMake (CGFloat deltaX, CGFloat deltaY) {
 
 }
 
+IRDelta IRDeltaFromSize (CGSize aSize) {
+
+	return (IRDelta) { aSize.width, aSize.height };
+
+}
+
 IRDelta IRDeltaFromPoints(CGPoint fromPoint, CGPoint toPoint) {
 
 	return (IRDelta) {
@@ -209,6 +215,17 @@ IRDelta IRDeltaFromPoints(CGPoint fromPoint, CGPoint toPoint) {
 		toPoint.x - fromPoint.x,
 		toPoint.y - fromPoint.y
 		
+	};
+
+}
+
+IRDelta IRDeltaFromRectSizes(CGRect fromRect, CGRect toRect) {
+
+	return (IRDelta) {
+	
+		CGRectGetWidth(toRect) - CGRectGetWidth(fromRect),
+		CGRectGetHeight(toRect) - CGRectGetHeight(fromRect)
+	
 	};
 
 }
@@ -223,6 +240,21 @@ CGRect irCGRectApplyDelta (CGRect aRect, IRDelta aDelta) {
 
 }
 
+CGRect irCGRectApplySizeDelta (CGRect aRect, IRDelta aDelta) {
+
+	aRect.size.width += aDelta.x;
+	aRect.size.height += aDelta.y;
+	return aRect;
+
+}
+
+CGRect irCGRectApplyOrigin (CGRect aRect, CGPoint anOrigin) {
+
+	aRect.origin = anOrigin;
+	return aRect;
+
+}
+
 CGPoint irCGRectAnchor (CGRect aRect, IRAnchor anchor, BOOL flipped) {
 
 	return (CGPoint) {
@@ -232,6 +264,12 @@ CGPoint irCGRectAnchor (CGRect aRect, IRAnchor anchor, BOOL flipped) {
 		
 	};
 	
+}
+
+CGPoint irUnitPointForAnchor (IRAnchor anchor, BOOL flipped) {
+
+	return irCGRectAnchor(CGRectMake(0, 0, 1, 1), anchor, flipped);
+
 }
 
 
@@ -253,12 +291,57 @@ CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRAnchor ancho
 
 
 
+CGRect irAnchoredRectFromEdge (CGRect aRect, IREdge anEdge, CGFloat widthOrHeight) {
+
+	CGRect finalRect = aRect;
+
+	if (anEdge | IREdgeHorizontal) {
+
+		finalRect.size.height = widthOrHeight;
+	
+	} else if (anEdge | IREdgeVertical) {
+
+		finalRect.size.width = widthOrHeight;
+	
+	}
+	
+	return IRCGRectAlignToRect(finalRect, aRect, IRAnchorForEdge(anEdge), YES);
+
+}
+
+
+
+
+
 CGFloat irDistanceFromRectToPoint (CGRect aRect, CGPoint aPoint, IRAnchor anchor) {
 
 	IRDelta aDelta = IRDeltaFromPoints(irCGRectAnchor(aRect, anchor, YES), aPoint);
 	
 	return sqrt(pow(aDelta.x, 2) + pow(aDelta.y, 2));
 
+}
+
+
+
+
+
+CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeInsets) {
+
+	CGRect referencedRect = irCGRectApplyOrigin(CGRectStandardize(aRect), CGPointZero); 
+	
+	CGRect returnedRect = CGRectMake(
+	
+		(edgeInsets.left / referencedRect.size.width),
+		(edgeInsets.top / referencedRect.size.height),
+		((referencedRect.size.width - edgeInsets.right - edgeInsets.left) / referencedRect.size.width),
+		((referencedRect.size.height - edgeInsets.bottom - edgeInsets.top) / referencedRect.size.height)
+	
+	);
+
+	NSLog(@"IRUnitRectWithRectAndEdgeInsets %@, %@ -> %@", NSStringFromCGRect(aRect), NSStringFromUIEdgeInsets(edgeInsets), NSStringFromCGRect(returnedRect));
+
+	return returnedRect;
+	
 }
 
 

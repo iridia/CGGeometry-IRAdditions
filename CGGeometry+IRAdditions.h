@@ -83,13 +83,24 @@ extern CGPoint irCGRectGetCenterOfRectFrame (CGRect aRect);
 extern CGRect irCGRectWithRectAndOrigin (CGRect aRect, CGPoint anOrigin);
 
 extern IRDelta IRDeltaMake (CGFloat deltaX, CGFloat deltaY);
+extern IRDelta IRDeltaFromSize (CGSize aSize);
 extern IRDelta IRDeltaFromPoints (CGPoint fromPoint, CGPoint toPoint);
+extern IRDelta IRDeltaFromRectSizes(CGRect fromRect, CGRect toRect);
 
 extern IRAnchor IRAnchorForEdge (IREdge edge);
+
+extern CGRect irCGRectApplyDelta (CGRect aRect, IRDelta aDelta);
+extern CGRect irCGRectApplySizeDelta (CGRect aRect, IRDelta aDelta);
+extern CGRect irCGRectApplyOrigin (CGRect aRect, CGPoint anOrigin);
 extern CGPoint irCGRectAnchor (CGRect aRect, IRAnchor anchor, BOOL flipped);
+extern CGPoint irUnitPointForAnchor (IRAnchor anchor, BOOL flipped);
 extern CGRect IRCGRectAlignToRect (CGRect theRect, CGRect referenceRect, IRAnchor anchor, BOOL flipped);
 
+extern CGRect irAnchoredRectFromEdge (CGRect aRect, IREdge anEdge, CGFloat widthOrHeight);
+
 extern CGFloat irDistanceFromRectToPoint (CGRect aRect, CGPoint aPoint, IRAnchor anchor);
+
+extern CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeInsets);
 
 #define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
 
