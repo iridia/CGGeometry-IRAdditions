@@ -338,8 +338,6 @@ CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeInsets) {
 	
 	);
 
-	NSLog(@"IRUnitRectWithRectAndEdgeInsets %@, %@ -> %@", NSStringFromCGRect(aRect), NSStringFromUIEdgeInsets(edgeInsets), NSStringFromCGRect(returnedRect));
-
 	return returnedRect;
 	
 }
