@@ -185,17 +185,6 @@ CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRect, CGFl
 
 
 
-CGRect irCGRectWithRectAndOrigin (CGRect aRect, CGPoint anOrigin) {
-
-	aRect.origin = anOrigin;
-	return aRect;
-
-}
-
-
-
-
-
 IRDelta IRDeltaMake (CGFloat deltaX, CGFloat deltaY) {
 
 	return (IRDelta) { deltaX, deltaY };

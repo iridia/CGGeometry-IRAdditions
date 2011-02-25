@@ -80,8 +80,6 @@ extern CGRect IRCGSizeGetCenteredInRect(CGSize enclosedSize, CGRect enclosingRec
 extern CGPoint irCGRectGetCenterOfRectBounds (CGRect aRect);
 extern CGPoint irCGRectGetCenterOfRectFrame (CGRect aRect);
 
-extern CGRect irCGRectWithRectAndOrigin (CGRect aRect, CGPoint anOrigin);
-
 extern IRDelta IRDeltaMake (CGFloat deltaX, CGFloat deltaY);
 extern IRDelta IRDeltaFromSize (CGSize aSize);
 extern IRDelta IRDeltaFromPoints (CGPoint fromPoint, CGPoint toPoint);
@@ -169,6 +167,8 @@ extern NSString* irDumpImpl (const char *encodedString, void * aPointer);
 
 #define IRCGRectGetGlobalMidXY irCGRectGetCenterOfRectFrame
 #define IRCGRectGetLocalMidXY irCGRectGetCenterOfRectBounds
+
+#define irCGRectWithRectAndOrigin(aRect, anOrigin) ((CGRect){ anOrigin, aRect.size });
 
 #define IRCGRectGetInsetRect(aRect, aPadding) CGRectInset(aRect, thePadding, thePadding)
 
