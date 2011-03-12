@@ -45,6 +45,8 @@ CGFloat (*irAnchorProcessorsYFlipped[])(CGRect) = {
 
 
 
+#if 0
+
 IRLine IRLineMake(CGPoint origin, CGPoint destination, CGFloat width, UIColor *color) {
 
 	IRLine theLine;
@@ -83,6 +85,8 @@ IRShadow IRShadowMake(IREdge edge, CGPoint offset, CGFloat spread, UIColor *colo
 	return theShadow;
 	
 }
+
+#endif
 
 
 

@@ -30,6 +30,8 @@ enum {
 
 }; typedef NSUInteger IREdge;
 
+#if 0
+
 struct IRLine {
 
 	CGPoint origin;
@@ -63,6 +65,8 @@ struct IRShadow {
 extern IRLine IRLineMake(CGPoint origin, CGPoint destination, CGFloat width, UIColor *color);
 extern IRBorder IRBorderMake (IREdge edge, IRBorderType type, CGFloat width, UIColor *color);
 extern IRShadow IRShadowMake(IREdge edge, CGPoint offset, CGFloat spread, UIColor *color);
+
+#endif
 
 #endif
 
