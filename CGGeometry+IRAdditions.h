@@ -106,7 +106,7 @@ extern CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeIn
 
 #define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
 
-#define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())
+#define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), (void *)&aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())
 
 extern NSString* irDumpImpl (const char *encodedString, void * aPointer);
 
