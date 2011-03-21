@@ -339,6 +339,21 @@ CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeInsets) {
 
 
 
+CGPoint irCGPointAddPoint(CGPoint aPoint, CGPoint anotherPoint) {
+
+	return (CGPoint) {
+	
+		aPoint.x + anotherPoint.x,
+		aPoint.y + anotherPoint.y
+	
+	};
+
+}
+
+
+
+
+
 NSString * irDumpImpl (const char *encodedString, void * aPointer) {
 
 	if (strcmp(encodedString, @encode(CGRect)) == 0)

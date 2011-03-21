@@ -104,6 +104,8 @@ extern CGFloat irDistanceFromRectToPoint (CGRect aRect, CGPoint aPoint, IRAnchor
 
 extern CGRect IRUnitRectWithRectAndEdgeInsets (CGRect aRect, UIEdgeInsets edgeInsets);
 
+extern CGPoint irCGPointAddPoint(CGPoint aPoint, CGPoint anotherPoint);
+
 #define irDump(inCGExpression) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@", irDumpImpl(@encode(__typeof__(inCGExpression)), &aCGStruct)); })())
 
 #define irDumpLog(inCGExpression,...) (( ^ { __typeof__(inCGExpression) aCGStruct = inCGExpression; NSLog(@"%@: %@", irDumpImpl(@encode(__typeof__(inCGExpression)), (void *)&aCGStruct), [NSString stringWithFormat:__VA_ARGS__]); })())
